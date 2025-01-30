@@ -15,11 +15,11 @@ Route::post('/v1/products', [ProductController::class, 'store']);
 Route::get('/v1/products/{productId}', [ProductController::class,'productById']);
 Route::patch('/v1/products/{productId}', [ProductController::class,'update']);
 
+Route::get('/v1/products/{productId}/comments', [CommentController::class, 'indexByProduct']);
+Route::post('/v1/products/{productId}/comments', [CommentController::class, 'storeForProduct']);
 
 // rutas para comments
 
 Route::get('/v1/comments', [CommentController::class,'index']);
 Route::post('/v1/comments', [CommentController::class,'store']);
 Route::get('/v1/comments/{commentId}', [CommentController::class,'show']);
-Route::get('/v1/products/{productId}/comments', [CommentController::class, 'indexByProduct']);
-Route::post('/v1/products/{productId}/comments', [CommentController::class, 'storeForProduct']);
