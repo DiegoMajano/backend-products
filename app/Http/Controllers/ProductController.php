@@ -68,7 +68,7 @@ class ProductController extends Controller
             ],400);
         }
 
-        $product = Product::find($id);
+        $product = Product::with('comments')->find($id);
 
         if($product){
             return response()->json($product, 200);
@@ -84,7 +84,7 @@ class ProductController extends Controller
             'image_url'=>'required|url:http,https',
             'description'=> 'required|string',
             'quantity'=>'required|integer', 
-            'price'=> 'required|decimal:2', 
+            'price'=> 'required|decimal:2|min:0', 
         ]);
 
         if($validator->fails()){

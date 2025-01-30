@@ -10,4 +10,8 @@ class Product extends Model
     //
     use HasFactory;
     protected $table = 'product';
+
+    public function comments(){
+        return $this->hasMany(Comment::class);
+    }
 }

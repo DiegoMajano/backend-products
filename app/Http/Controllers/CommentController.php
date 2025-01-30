@@ -59,4 +59,37 @@ class CommentController extends Controller
         return response()->json($comment,200);
     }
 
+    public function indexByProduct($productId)
+{
+    // Obtener los comentarios del producto específico
+    $comments = Comment::where('product_id', $productId)->get();
+    return response()->json($comments, 200);
+}
+
+public function storeForProduct(Request $request, $productId)
+{
+    $validator = Validator::make($request->all(), [
+        'comment' => 'required|string',
+        'assessment' => 'required|integer|min:1|max:5',
+        'user_id' => 'required|exists:users,id',
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json([
+            'message' => 'Validation error',
+            'errors' => $validator->errors(),
+        ], 400);
+    }
+
+    $comment = new Comment();
+    $comment->comment = $request->input('comment');
+    $comment->assessment = $request->input('assessment');
+    $comment->user_id = $request->input('user_id');
+    $comment->product_id = $productId;  
+
+    $comment->save();
+
+    return response()->json(['message' => 'Successfully registered'], 201);
+}
+
 }
