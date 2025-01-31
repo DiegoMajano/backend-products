@@ -14,11 +14,13 @@ Route::middleware('auth:sanctum')->group(function(){
 
     Route::post('/v1/products', [ProductController::class, 'store']);
     Route::patch('/v1/products/{productId}', [ProductController::class,'update']);
+    Route::delete('/v1/products/{productId}', [ProductController::class, 'destroy']);
 
     Route::post('/v1/products/{productId}/comments', [CommentController::class, 'storeForProduct']);
     Route::post('/v1/comments', [CommentController::class,'store']);
 
     Route::post('/v1/logout',[AuthController::class, 'logout']);
+
 
 });
 
@@ -27,6 +29,8 @@ Route::get('/v1/products', [ProductController::class,'index']);
 Route::get('/v1/products/{productId}', [ProductController::class,'productById']);
 
 Route::get('/v1/products/{productId}/comments', [CommentController::class, 'indexByProduct']);
+
+
 
 // rutas para comments
 
