@@ -15,7 +15,7 @@ class AuthController extends Controller
         // Validar datos de entrada
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'username'=>'required|string',
+            'username' => 'required|string',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
         ]);
@@ -28,10 +28,10 @@ class AuthController extends Controller
         // Crear usuario
         $user = User::create([
             'name' => $request->name,
-            'username'=>$request->username,
+            'username' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            
+
         ]);
 
         // Generar token de acceso
@@ -46,45 +46,49 @@ class AuthController extends Controller
 
     //metood para login
 
-    public function login(Request $request){
-
+    public function login(Request $request)
+    {
         $validator = Validator::make($request->all(), [
-            'email'=>'required|email',
-            'password'=> 'required|string'
+            'email' => 'required|email',
+            'password' => 'required|string'
         ]);
 
-
-        if($validator->fails()){
+        if ($validator->fails()) {
             return response()->json([
-                'meesage' => 'Validator error', 
-                'errors'=> $validator->errors()
-            ],400);
+                'message' => 'Validation error',
+                'errors' => $validator->errors()
+            ], 400);
         }
 
-        $email=$request->input('email');
-        $password=$request->input('password');
+        $user = User::where('email', $request->email)->first();
 
-        $user = User::where('email',$email)->where('password','=',$password)->first();
-
-        if($user){
-            $token = $user->createToken('api-token')->plainTextToken;
-
+        if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json([
-                "user"=>$email, 
-                "token"=>$token,
-            ],200);
-        } else{
-            return response()->json(['message' => 'You are not authorized'], 401);
+                'message' => 'Invalid email or password'
+            ], 401);
         }
-    
-    
+
+        $user->tokens()->delete();
+
+        $token = $user->createToken('api-token')->plainTextToken;
+
+        return response()->json([
+            'message' => 'Login successful',
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+            ],
+            'token' => $token
+        ], 200);
     }
 
-    public function logout(Request $request){
+
+    public function logout(Request $request)
+    {
 
         $request->user()->currentAccessToken()->delete();
 
-        return response()->json((['mensaje'=>'Se ha cerrado la sesión']));
-
+        return response()->json((['mensaje' => 'Se ha cerrado la sesión']));
     }
 }
