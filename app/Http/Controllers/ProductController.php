@@ -50,14 +50,17 @@ class ProductController extends Controller
 
         $product->save();
 
-        return response()->json(['message'=>'Successfully registered'],201);
+        return response()->json([
+            'message'=>'Successfully registered',
+            'product' => $product
+        ],201);
     }
 
     // get product by id
 
-    public function productById($id){   
+    public function productById($productId){   
 
-        $validator = Validator::make(['id'=> $id],[
+        $validator = Validator::make(['id'=> $productId],[
             'id' => 'required|integer',
         ]);
 
@@ -68,7 +71,7 @@ class ProductController extends Controller
             ],400);
         }
 
-        $product = Product::with('comments')->find($id);
+        $product = Product::with('comments')->find($productId);
 
         if($product){
             return response()->json($product, 200);
@@ -77,11 +80,11 @@ class ProductController extends Controller
         return response()->json(['message' => 'Product not found'],404);
     }
 
-    public function update(Request $request, $id){
+    public function update(Request $request, $productId){
 
         $validator = Validator::make($request->all(),[
             'name'=>'required|string',
-            'image_url'=>'required|url:http,https',
+            'image_url'=>'required|url',
             'description'=> 'required|string',
             'quantity'=>'required|integer', 
             'price'=> 'required|decimal:2|min:0', 
@@ -94,7 +97,7 @@ class ProductController extends Controller
             ], 400);
         }
         
-        $product = Product::find($id);
+        $product = Product::find($productId);
 
         if($product){
 
