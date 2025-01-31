@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
@@ -23,3 +24,7 @@ Route::post('/v1/products/{productId}/comments', [CommentController::class, 'sto
 Route::get('/v1/comments', [CommentController::class,'index']);
 Route::post('/v1/comments', [CommentController::class,'store']);
 Route::get('/v1/comments/{commentId}', [CommentController::class,'show']);
+
+// rutas para user
+
+Route::get('/v1/user/login', [AuthController::class,'login']);

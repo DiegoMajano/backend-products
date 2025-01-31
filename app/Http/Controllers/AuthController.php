@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -13,7 +14,7 @@ class AuthController extends Controller
 
         $validator = Validator::make($request->all(), [
             'email'=>'required|email',
-            'password'=> ''
+            'password'=> 'required|string'
         ]);
 
 
@@ -23,5 +24,23 @@ class AuthController extends Controller
                 'errors'=> $validator->errors()
             ],400);
         }
+
+        $email=$request->input('email');
+        $password=$request->input('password');
+
+        $user = User::where('email',$email)->where('password','=',$password)->first();
+    
+        if($user){
+            $token = $user->createToken('api-token')->plainTextToken;
+
+            return response()->json([
+                "user"=>$email, 
+                "token"=>$token,
+            ],200);
+        } else{
+            return response()->json(['message' => 'You are not authorized'], 401);
+        }
+    
+    
     }
 }
