@@ -29,7 +29,7 @@ class AuthController extends Controller
         $password=$request->input('password');
 
         $user = User::where('email',$email)->where('password','=',$password)->first();
-    
+
         if($user){
             $token = $user->createToken('api-token')->plainTextToken;
 
@@ -42,5 +42,14 @@ class AuthController extends Controller
         }
     
     
+    }
+
+    public function logout(Request $request){
+
+        $request->user()->currentAccessToken()->delete();
+
+        return response()->json((['mensaje'=>'Se ja cerrado la sesión']));
+
+        
     }
 }
