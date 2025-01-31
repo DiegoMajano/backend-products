@@ -40,3 +40,5 @@ Route::post('/v1/user/login', [AuthController::class,'login']);
 Route::get('/token', function(){
     return response()->json(['mensaje'=>'Necesitas un token'], 401);
 })->name('login');
+
+Route::post('/v1/register', [AuthController::class, 'register']);
