@@ -52,7 +52,7 @@ class CommentController extends Controller
 
         $comment = Comment::join('users','users.id','=','comment.user_id')
         ->join('product','product.id','=','comment.product_id')
-        ->where('comment.id','=',$id)
+        ->where('product.id','=',$id)
         ->select('*')
         ->get();
 
