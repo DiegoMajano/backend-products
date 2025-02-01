@@ -53,7 +53,7 @@ class CommentController extends Controller
         $comment = Comment::join('users','users.id','=','comment.user_id')
         ->join('product','product.id','=','comment.product_id')
         ->where('product.id','=',$id)
-        ->select('*')
+        ->select('comment.comment','comment.assessment', 'comment.created_at','users.username', 'product.name', 'product.description')
         ->get();
 
         return response()->json($comment,200);
